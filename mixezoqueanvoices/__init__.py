@@ -1,11 +1,5 @@
-import collections
-
 from pyramid.config import Configurator
 
-from clld_glottologfamily_plugin import util
-
-from clld.interfaces import IMapMarker, IValueSet, IValue, IDomainElement
-from clldutils.svg import pie, icon, data_url
 
 # we must make sure custom models are known at database initialization!
 from mixezoqueanvoices import models
