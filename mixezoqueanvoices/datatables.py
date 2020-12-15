@@ -67,11 +67,10 @@ class Words(datatables.Values):
                 ),
             ])
             # FIXME: link to map!
-        res.extend([
-            Col(self, 'name', sTitle=self.req._('Word')),
-            ReconstructionsCol(self, 'description', sTitle='Reconstruction'),
-            AudioCol(self, '#')
-        ])
+        res.append(Col(self, 'name', sTitle=self.req._('Word')))
+        if self.language:
+            res.append(ReconstructionsCol(self, 'description', sTitle='Reconstruction'))
+        res.append(AudioCol(self, '#'))
         return res
 
 

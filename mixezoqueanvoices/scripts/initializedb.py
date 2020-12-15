@@ -87,7 +87,18 @@ def main(args):
 
     refs = collections.defaultdict(list)
 
+    # Store proto-forms for later lookup:
+    proto_forms = collections.defaultdict(lambda: collections.defaultdict(list))
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference'):
+        if form['languageReference'].startswith('Proto'):
+            proto_forms[form['languageReference']][form['parameterReference']].append(form['form'])
+
     for param in args.cldf.iter_rows('ParameterTable', 'id', 'concepticonReference', 'name'):
+        proto = collections.OrderedDict()
+        for lid, forms in proto_forms.items():
+            f = forms.get(param['id'])
+            if f:
+                proto[lnames[lid]] = f
         data.add(
             models.Concept,
             param['id'],
@@ -96,13 +107,8 @@ def main(args):
             concepticon_id=param['concepticonReference'],
             concepticon_gloss=param['Concepticon_Gloss'],
             description=param['Spanish_Gloss'],
+            jsondata=dict(reconstructions=proto),
         )
-
-    # Store proto-forms for later lookup:
-    proto_forms = collections.defaultdict(lambda: collections.defaultdict(list))
-    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference'):
-        if form['languageReference'].startswith('Proto'):
-            proto_forms[form['languageReference']][form['parameterReference']].append(form['form'])
 
     f2a = form2audio(args.cldf)
     for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
