@@ -53,13 +53,23 @@ def main(args):
     for i, ed in enumerate(['kondic', 'gray']):
         data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
+    ancestors = collections.defaultdict(list)
     gl = Glottolog(args.glottolog)
+    lnames = {}
     for lang in args.cldf.iter_rows('LanguageTable', 'id', 'glottocode', 'name', 'latitude', 'longitude'):
+        lnames[lang['id']] = lang['name']
         glang = None
         if lang['glottocode']:
             glang = gl.languoid(lang['glottocode'])
+            lineage = [i[0] for i in glang.lineage]
+            if 'Mixe-Zoque' in lineage:
+                ancestors[lang['id']].append('Protomixezoque')
+            if 'Mixe' in lineage:
+                ancestors[lang['id']].append('Protomixe')
+            if 'Oaxaca Mixe' in lineage:
+                ancestors[lang['id']].append('Protooaxacamixe')
         if not glang:
-            assert lang['name'] == 'Nizaviguiti' or (lang['IsProto'] == 'True')
+            assert lang['name'] == 'Nizaviguiti'
         data.add(
             models.Variety,
             lang['id'],
@@ -85,7 +95,14 @@ def main(args):
             name='{} [{}]'.format(param['name'], param['id'].split('_')[0]),
             concepticon_id=param['concepticonReference'],
             concepticon_gloss=param['Concepticon_Gloss'],
+            description=param['Spanish_Gloss'],
         )
+
+    # Store proto-forms for later lookup:
+    proto_forms = collections.defaultdict(lambda: collections.defaultdict(list))
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference'):
+        if form['languageReference'].startswith('Proto'):
+            proto_forms[form['languageReference']][form['parameterReference']].append(form['form'])
 
     f2a = form2audio(args.cldf)
     for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
@@ -103,6 +120,11 @@ def main(args):
         for ref in form.get('source', []):
             sid, pages = Sources.parse(ref)
             refs[(vsid, sid)].append(pages)
+        proto = collections.OrderedDict()
+        for lid in ancestors.get(form['languageReference'], []):
+            f = proto_forms[lid].get(form['parameterReference'])
+            if f:
+                proto[lnames[lid]] = f
         data.add(
             Counterpart,
             form['id'],
@@ -110,6 +132,7 @@ def main(args):
             name=form['form'],
             valueset=vs,
             audio=f2a.get(form['id']),
+            jsondata=dict(reconstructions=proto),
         )
 
     for (vsid, sid), pages in refs.items():

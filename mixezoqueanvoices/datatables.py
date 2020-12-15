@@ -1,6 +1,7 @@
 from clld.web.datatables.base import LinkCol, Col, LinkToMapCol
 from clld.web import datatables
 from clld.web.util import concepticon
+from clld.web.util.htmllib import HTML
 from clld.db.util import get_distinct_values
 from clld.db.models import common
 from clld_audio_plugin.datatables import AudioCol
@@ -27,12 +28,33 @@ class Languages(datatables.Languages):
         ]
 
 
+class ReconstructionsCol(Col):
+    __kw__ = dict(bSearchable=False, bSortable=False)
+
+    def format(self, item):
+        return HTML.ul(
+            *[HTML.li('{}: {}'.format(k, ', '.join(v)))
+              for k, v in item.jsondata['reconstructions'].items()],
+            **{'class': 'unstyled'})
+
+
 class Words(datatables.Values):
     def col_defs(self):
         res = []
         if self.language:
             res.extend([
-                LinkCol(self, 'gloss_en', sTitle=self.req._('English'), get_object=lambda v: v.valueset.parameter),
+                LinkCol(
+                    self,
+                    'gloss_en',
+                    sTitle=self.req._('English'),
+                    model_col=common.Parameter.name,
+                    get_object=lambda v: v.valueset.parameter),
+                Col(self,
+                    'gloss_en',
+                    sTitle=self.req._('Spanish'),
+                    get_object=lambda v: v.valueset.parameter,
+                    model_col=common.Parameter.description,
+                    format=lambda i: i.valueset.parameter.description),
             ])
         elif self.parameter:
             res.extend([
@@ -47,6 +69,7 @@ class Words(datatables.Values):
             # FIXME: link to map!
         res.extend([
             Col(self, 'name', sTitle=self.req._('Word')),
+            ReconstructionsCol(self, 'description', sTitle='Reconstruction'),
             AudioCol(self, '#')
         ])
         return res
@@ -61,6 +84,7 @@ class Concepts(datatables.Parameters):
     def col_defs(self):
         return [
             LinkCol(self, 'name', sTitle=self.req._('English')),
+            Col(self, 'description', sTitle='Spanish'),
             ConcepticonCol(self, 'concepticon'),
         ]
 
