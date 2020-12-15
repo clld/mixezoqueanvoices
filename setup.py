@@ -20,7 +20,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'clld',  # >=7.0
-        'clld-audio-plugin>=0.2',
+        'clld-audio-plugin>=0.1.1',
         'clldmpg',
         'pyglottolog',
 
