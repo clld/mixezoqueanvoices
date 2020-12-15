@@ -1,4 +1,3 @@
-import itertools
 import collections
 
 from pycldf import Sources
@@ -9,32 +8,34 @@ from clld.db.models import common
 from clld.lib import bibtex
 from clld_audio_plugin.models import Counterpart
 from clld_audio_plugin.util import form2audio
+from clldutils import licenses
+from pyglottolog import Glottolog
 
 import mixezoqueanvoices
 from mixezoqueanvoices import models
 
 
 def main(args):
-
     assert args.glottolog, 'The --glottolog option is required!'
+    license = licenses.find(args.cldf.properties['dc:license'])
+    assert license and license.id.startswith('CC-')
 
     data = Data()
-    data.add(
+    ds = data.add(
         common.Dataset,
         mixezoqueanvoices.__name__,
         id=mixezoqueanvoices.__name__,
+        name="Mixe-Zoquean Voices",
         domain='mixezoqueanvoices.clld.org',
-
         publisher_name="Max Planck Institute for the Science of Human History",
         publisher_place="Jena",
         publisher_url="http://www.shh.mpg.de",
-        license="http://creativecommons.org/licenses/by/4.0/",
+        license=license.url,
         jsondata={
-            'license_icon': 'cc-by.png',
-            'license_name': 'Creative Commons Attribution 4.0 International License'},
-
+            'license_icon': '{}.png'.format(
+                '-'.join([p.lower() for p in license.id.split('-')[:-1]])),
+            'license_name': license.name},
     )
-
 
     contrib = data.add(
         common.Contribution,
@@ -43,8 +44,22 @@ def main(args):
         name=args.cldf.properties.get('dc:title'),
         description=args.cldf.properties.get('dc:bibliographicCitation'),
     )
+    data.add(common.Contributor, 'kondic', id='kondic', name='Ana Kondic')
+    data.add(common.Contributor, 'gray', id='gray', name='Russell Gray')
+    DBSession.add(common.ContributionContributor(
+        contribution=contrib,
+        contributor=data['Contributor']['kondic'],
+    ))
+    for i, ed in enumerate(['kondic', 'gray']):
+        data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
+    gl = Glottolog(args.glottolog)
     for lang in args.cldf.iter_rows('LanguageTable', 'id', 'glottocode', 'name', 'latitude', 'longitude'):
+        glang = None
+        if lang['glottocode']:
+            glang = gl.languoid(lang['glottocode'])
+        if not glang:
+            assert lang['name'] == 'Nizaviguiti' or (lang['IsProto'] == 'True')
         data.add(
             models.Variety,
             lang['id'],
@@ -53,6 +68,8 @@ def main(args):
             latitude=lang['latitude'],
             longitude=lang['longitude'],
             glottocode=lang['glottocode'],
+            description=lang['LongName'],
+            subgroup=glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None,
         )
 
     for rec in bibtex.Database.from_file(args.cldf.bibpath, lowercase=True):
@@ -60,14 +77,16 @@ def main(args):
 
     refs = collections.defaultdict(list)
 
-
     for param in args.cldf.iter_rows('ParameterTable', 'id', 'concepticonReference', 'name'):
         data.add(
             models.Concept,
             param['id'],
             id=param['id'],
-            name='{} [{}]'.format(param['name'], param['id']),
+            name='{} [{}]'.format(param['name'], param['id'].split('_')[0]),
+            concepticon_id=param['concepticonReference'],
+            concepticon_gloss=param['Concepticon_Gloss'],
         )
+
     f2a = form2audio(args.cldf)
     for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
         vsid = (form['languageReference'], form['parameterReference'])

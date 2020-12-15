@@ -18,7 +18,7 @@
     <h2>${_('Welcome to')} Mixe-Zoquean Voices</h2>
 
     <p class="lead">
-        ${_('Mixe-Zoquean Voices presents phonetically-transcribed primary recordings of languages from the Mixe-Zoque language family.')}
+        ${_('Mixe-Zoquean Voices presents primary recordings of languages from the Mixe-Zoque language family.')}
     </p>
 
     ##<p>

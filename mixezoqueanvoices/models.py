@@ -23,12 +23,12 @@ from clld_audio_plugin.models import Counterpart
 class Variety(CustomModelMixin, common.Language):
     pk = Column(Integer, ForeignKey('language.pk'), primary_key=True)
     glottocode = Column(Unicode)
-
-
+    subgroup = Column(Unicode)
 
 
 @implementer(interfaces.IParameter)
 class Concept(CustomModelMixin, common.Parameter):
     pk = Column(Integer, ForeignKey('parameter.pk'), primary_key=True)
     concepticon_id = Column(Unicode)
+    concepticon_gloss = Column(Unicode)
 
