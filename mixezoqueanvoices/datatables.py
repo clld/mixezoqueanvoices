@@ -2,6 +2,7 @@ from clld.web.datatables.base import LinkCol, Col, LinkToMapCol
 from clld.web import datatables
 from clld.web.util import concepticon
 from clld.web.util.htmllib import HTML
+from clld.web.util.helpers import map_marker_img
 from clld.db.util import get_distinct_values
 from clld.db.models import common
 from clld_audio_plugin.datatables import AudioCol
@@ -9,11 +10,17 @@ from clld_audio_plugin.datatables import AudioCol
 from mixezoqueanvoices import models
 
 
+class SubgroupCol(Col):
+    def format(self, item):
+        return HTML.div(map_marker_img(self.dt.req, item), ' ', HTML.span(item.subgroup))
+
+
 class Languages(datatables.Languages):
     def col_defs(self):
         return [
             LinkCol(self, 'name', sTitle=self.req._('Name')),
-            Col(self,
+            SubgroupCol(
+                self,
                 'subgroup',
                 sTitle=self.req._('Subgroup'),
                 model_col=models.Variety.subgroup,

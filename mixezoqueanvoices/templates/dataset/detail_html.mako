@@ -21,9 +21,12 @@
         ${_('Mixe-Zoquean Voices presents primary recordings of languages from the Mixe-Zoque language family.')}
     </p>
 
-    ##<p>
-    ##    ${_('Cite the Mixe-Zoquean Voices dataset as')}
-    ##</p>
-    ##<blockquote>
-    ##</blockquote>
+    <p>
+        ${_('Cite the Mixe-Zoquean Voices dataset as')}
+    </p>
+    <blockquote>
+        Ana Kondić, Paul Heggarty, & Darja Dërmaku-Appelganz. (2020). Mixe-Zoquean Voices Media Files (Version 1.0) [Data set]. Zenodo. http://doi.org/10.5281/zenodo.4327575
+        <br>
+        <a href="https://doi.org/10.5281/zenodo.4327575"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4327575.svg" alt="DOI"></a>
+    </blockquote>
 </div>

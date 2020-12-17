@@ -10,8 +10,8 @@
         ${_('of data curated at')}
         ${h.external_link('https://github.com/lexibank/mixezoqueanvoices', label='lexibank/mixezoqueanvoices')}.
         ${_('All released version are accessible via')} <br/>
-        <a href="https://doi.org/10.5281/zenodo.xxx">
-            <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.xxx.svg" alt="DOI">
+        <a href="https://doi.org/10.5281/zenodo.4327574">
+            <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4327574.svg" alt="DOI">
         </a>
         <br/>
         ${_('on ZENODO as well')}.

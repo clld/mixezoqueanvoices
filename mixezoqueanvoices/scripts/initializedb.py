@@ -9,6 +9,7 @@ from clld.lib import bibtex
 from clld_audio_plugin.models import Counterpart
 from clld_audio_plugin.util import form2audio
 from clldutils import licenses
+from clldutils.color import qualitative_colors
 from pyglottolog import Glottolog
 
 import mixezoqueanvoices
@@ -81,6 +82,11 @@ def main(args):
             description=lang['LongName'],
             subgroup=glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None,
         )
+    colors = dict(zip(
+        set(l.subgroup for l in data['Variety'].values()),
+        qualitative_colors(len(set(l.subgroup for l in data['Variety'].values())))))
+    for l in data['Variety'].values():
+        l.jsondata = dict(color=colors[l.subgroup].replace('#', ''))
 
     for rec in bibtex.Database.from_file(args.cldf.bibpath, lowercase=True):
         data.add(common.Source, rec.id, _obj=bibtex2source(rec))
@@ -112,6 +118,8 @@ def main(args):
 
     f2a = form2audio(args.cldf)
     for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
+        if form['form'] == '►' and not f2a.get(form['id']):
+            continue
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)
         if not vs:
