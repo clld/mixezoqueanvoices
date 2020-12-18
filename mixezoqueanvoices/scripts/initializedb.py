@@ -118,8 +118,7 @@ def main(args):
 
     f2a = form2audio(args.cldf)
     for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
-        if form['form'] == '►' and not f2a.get(form['id']):
-            continue
+        assert not (form['form'] == '►' and not f2a.get(form['id']))
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)
         if not vs:

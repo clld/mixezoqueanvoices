@@ -25,8 +25,8 @@
         ${_('Cite the Mixe-Zoquean Voices dataset as')}
     </p>
     <blockquote>
-        Ana Kondić, Paul Heggarty, & Darja Dërmaku-Appelganz. (2020). Mixe-Zoquean Voices (Version 1.0) [Data set]. Zenodo. http://doi.org/10.5281/zenodo.4327418
+        Ana Kondić, Paul Heggarty, & Darja Dërmaku-Appelganz. (2020). Mixe-Zoquean Voices (Version 1.0.1) [Data set]. Zenodo. http://doi.org/10.5281/zenodo.4350652
         <br>
-        <a href="https://doi.org/10.5281/zenodo.4327418"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4327418.svg" alt="DOI"></a>
+        <a href="https://doi.org/10.5281/zenodo.4350652"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4350652.svg" alt="DOI"></a>
     </blockquote>
 </div>
