@@ -16,4 +16,12 @@
         <br/>
         ${_('on ZENODO as well')}.
     </p>
+    <p>
+        Corresponding versions of the audio files are available at<br/>
+        <a href="https://doi.org/10.5281/zenodo.4327574">
+            <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4327574.svg" alt="DOI">
+        </a>
+        <br/>
+        ${_('on ZENODO as well')}.
+    </p>
 </div>
