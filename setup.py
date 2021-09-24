@@ -19,11 +19,12 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'clld',  # >=7.0
-        'clld-audio-plugin>=0.1.1',
-        'clldmpg',
-        'pyglottolog',
-
+        'clld>=8.0.0.',
+        'cldfbench',
+        'clld-glottologfamily-plugin>=4.0',
+        'clld-audio-plugin',
+        'pyglottolog>=3.6.0',
+        'clldmpg>=4.2.0',
 ],
 extras_require={
         'dev': ['flake8', 'waitress', 'psycopg2'],
