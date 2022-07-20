@@ -19,7 +19,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'clld>=8.0.0.',
+        'clld>=9.2.1',
         'cldfbench',
         'clld-glottologfamily-plugin>=4.0',
         'clld-audio-plugin',
