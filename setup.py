@@ -19,17 +19,17 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'clld>=9.2.2',
-        'cldfbench',
+        'clld>=11.0.1',
+        'cldfbench>=1.13.0',
         'clld-glottologfamily-plugin>=4.0',
-        'clld-audio-plugin',
-        'pyglottolog>=3.6.0',
-        'clldmpg>=4.2.0',
+        'clld-audio-plugin>=1.0.0',
+        'pyglottolog>=3.12.0',
+        'clldmpg>=4.3.0',
 ],
 extras_require={
         'dev': ['flake8', 'waitress', 'psycopg2'],
         'test': [
-            'pytest>=5.4',
+            'pytest>=7.4.0',
             'pytest-clld',
             'pytest-mock',
             'pytest-cov',

@@ -1,4 +1,5 @@
 from clld.web.datatables.base import LinkCol, Col, LinkToMapCol
+from clld.web.datatables.contributor import Contributors
 from clld.web import datatables
 from clld.web.util import concepticon
 from clld.web.util.htmllib import HTML
@@ -25,6 +26,18 @@ class Languages(datatables.Languages):
                 sTitle=self.req._('Subgroup'),
                 model_col=models.Variety.subgroup,
                 choices=get_distinct_values(models.Variety.subgroup)),
+            Col(self, 'count_concepts',
+                sTitle=self.req._('# concepts'),
+                sTooltip=self.req._('number of concepts per language'),
+                model_col=models.Variety.count_concepts),
+            Col(self, 'count_lexemes',
+                sTitle=self.req._('# words'),
+                sTooltip=self.req._('number of words per language'),
+                model_col=models.Variety.count_lexemes),
+            Col(self, 'count_soundfiles',
+                sTitle=self.req._('# audio'),
+                sTooltip=self.req._('number of sound files per language'),
+                model_col=models.Variety.count_soundfiles),
             Col(self,
                 'latitude',
                 sDescription='<small>The geographic latitude</small>'),
@@ -91,7 +104,19 @@ class Concepts(datatables.Parameters):
         return [
             LinkCol(self, 'name', sTitle=self.req._('English')),
             Col(self, 'description', sTitle='Spanish'),
+            Col(self, 'count_lexemes',
+                sTitle=self.req._('# words'),
+                sTooltip=self.req._('number of words per concept'),
+                model_col=models.Concept.count_lexemes),
             ConcepticonCol(self, 'concepticon'),
+        ]
+
+
+class MZContributors(Contributors):
+    def col_defs(self):
+        return [
+            Col(self, 'name', sTitle=self.req._('Name')),
+            Col(self, 'description', sTitle=self.req._('Role')),
         ]
 
 
@@ -99,3 +124,4 @@ def includeme(config):
     config.register_datatable('languages', Languages)
     config.register_datatable('parameters', Concepts)
     config.register_datatable('values', Words)
+    config.register_datatable('contributors', MZContributors)
