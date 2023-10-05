@@ -21,7 +21,6 @@ from nameparser import HumanName
 import mixezoqueanvoices
 from mixezoqueanvoices import models
 
-# clld initdb --glottolog /Users/bibiko/Library/Application\ Support/cldf/glottolog --concepticon /Users/bibiko/Library/Application\ Support/cldf/concepticon --cldf /Users/bibiko/Documents/Developments/DLCE/lexibank/mixezoqueanvoices/cldf/cldf-metadata.json ./development.ini
 
 def main(args):
     assert args.glottolog, 'The --glottolog option is required!'
@@ -130,10 +129,10 @@ def main(args):
     )
 
     colors = dict(zip(
-        set(l.subgroup for l in data['Variety'].values()),
-        qualitative_colors(len(set(l.subgroup for l in data['Variety'].values())))))
-    for l in data['Variety'].values():
-        l.jsondata = dict(color=colors[l.subgroup].replace('#', ''))
+        set(lg.subgroup for lg in data['Variety'].values()),
+        qualitative_colors(len(set(lg.subgroup for lg in data['Variety'].values())))))
+    for lg in data['Variety'].values():
+        lg.jsondata = dict(color=colors[lg.subgroup].replace('#', ''))
 
     for rec in bibtex.Database.from_file(args.cldf.bibpath, lowercase=True):
         data.add(common.Source, rec.id, _obj=bibtex2source(rec))
@@ -224,9 +223,9 @@ def prime_cache(args):
         language.count_concepts = len(language.valuesets)
         language.count_lexemes = len(DBSession.query(common.Value.id)
                                      .filter(common.ValueSet.language_pk == language.pk)
-                                     .filter(common.Value.name != '►')\
+                                     .filter(common.Value.name != '►')
                                      .join(common.ValueSet).all())
         language.count_soundfiles = len(DBSession.query(Counterpart.id)
-                                     .filter(common.ValueSet.language_pk == language.pk)
-                                     .filter(Counterpart.audio.isnot(None))
-                                     .join(common.ValueSet).all())
+                                        .filter(common.ValueSet.language_pk == language.pk)
+                                        .filter(Counterpart.audio.isnot(None))
+                                        .join(common.ValueSet).all())

@@ -78,13 +78,14 @@ class Words(datatables.Values):
             ])
         elif self.parameter:
             res.extend([
-                LinkCol(self, 'language', sTitle=self.req._('Language'), get_object=lambda v: v.valueset.language),
+                LinkCol(self, 'language', sTitle=self.req._('Language'),
+                        get_object=lambda v: v.valueset.language),
                 Col(self,
                     'desc',
                     sTitle=self.req._('Location'),
                     get_object=lambda v: v.valueset.language,
                     model_col=common.Language.description,
-                ),
+                    ),
             ])
             # FIXME: link to map!
         res.append(Col(self, 'name', sTitle=self.req._('Word')))
