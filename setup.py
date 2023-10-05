@@ -39,6 +39,10 @@ extras_require={
         ],
     },
     test_suite="mixezoqueanvoices",
+    message_extractors={'mixezoqueanvoices': [
+        ('**.py', 'python', None),
+        ('**.mako', 'mako', {'encoding': 'utf8'}),
+        ('web/static/**', 'ignore', None)]},
     entry_points="""\
     [paste.app_factory]
     main = mixezoqueanvoices:main
