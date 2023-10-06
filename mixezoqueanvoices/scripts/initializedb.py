@@ -91,8 +91,14 @@ def main(args):
                 ancestors[lang['id']].append('Protomixe')
             if 'Oaxaca Mixe' in lineage:
                 ancestors[lang['id']].append('Protooaxacamixe')
+            sgroup = glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None
         if not glang:
-            assert lang['name'] == 'Nizaviguiti'
+            if lang['name'] == 'Nizaviguiti':
+                ancestors[lang['id']].append('Protomixe')
+                sgroup = 'Mixe'
+            elif lang['name'] == 'Tapalapa':
+                ancestors[lang['id']].append('Protomixezoque')
+                sgroup = 'Zoque'
 
         contrib = data.add(
             common.Contribution,
@@ -117,7 +123,7 @@ def main(args):
             longitude=lang['longitude'],
             glottocode=lang['glottocode'],
             description=lang['LongName'],
-            subgroup=glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None,
+            subgroup=sgroup,
         )
 
     contrib = data.add(
@@ -166,7 +172,7 @@ def main(args):
         data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
     f2a = form2audio(args.cldf, 'audio/mpeg')
-    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source', 'comment'):
         assert not (form['form'] == '►' and not f2a.get(form['id']))
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)
@@ -192,6 +198,7 @@ def main(args):
             form['id'],
             id=form['id'],
             name=form['form'],
+            description=form['comment'],
             valueset=vs,
             audio=f2a.get(form['id']),
             jsondata=dict(reconstructions=proto),
