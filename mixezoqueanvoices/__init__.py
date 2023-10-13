@@ -7,6 +7,13 @@ from clldutils.svg import icon, data_url
 from mixezoqueanvoices import models
 
 
+_ = lambda s: s
+_('Languages')
+_('Parameters')
+_('Language')
+_('Parameter')
+
+
 class LanguageBySubgroupMapMarker(MapMarker):
     def __call__(self, ctx, req):
         if IValue.providedBy(ctx):

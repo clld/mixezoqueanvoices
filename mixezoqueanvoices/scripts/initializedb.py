@@ -1,4 +1,5 @@
 import collections
+import pathlib
 
 from pycldf import Sources
 from clldutils.misc import nfilter
@@ -10,7 +11,12 @@ from clld_audio_plugin.models import Counterpart
 from clld_audio_plugin.util import form2audio
 from clldutils import licenses
 from clldutils.color import qualitative_colors
+from clldutils.misc import slug
+from cldfbench import get_dataset
 from pyglottolog import Glottolog
+from sqlalchemy import func
+from sqlalchemy.orm import joinedload
+from nameparser import HumanName
 
 import mixezoqueanvoices
 from mixezoqueanvoices import models
@@ -30,7 +36,7 @@ def main(args):
         domain='mixezoqueanvoices.clld.org',
         publisher_name="Max Planck Institute for Evolutionary Anthropology",
         publisher_place="Leipzig",
-        publisher_url="http://www.eva.mpg.de",
+        publisher_url="https://www.eva.mpg.de",
         license=license.url,
         jsondata={
             'license_icon': '{}.png'.format(
@@ -38,21 +44,37 @@ def main(args):
             'license_name': license.name},
     )
 
-    contrib = data.add(
-        common.Contribution,
-        None,
-        id='cldf',
-        name=args.cldf.properties.get('dc:title'),
-        description=args.cldf.properties.get('dc:bibliographicCitation'),
+    r = get_dataset('mixezoqueanvoices', ep='lexibank.dataset')
+    authors, _ = r.get_creators_and_contributors()
+    for ord, author in enumerate(authors):
+        cid = slug(HumanName(author['name']).last)
+        c = data.add(
+            common.Contributor,
+            cid,
+            id=cid,
+            name=author['name'],
+            description=author.get('description'),
+            jsondata=None,
+        )
+
+    contribs = collections.defaultdict(lambda: collections.defaultdict(list))
+    for c in args.cldf.iter_rows('contributions.csv'):
+        for role in ['phonetic_transcriptions', 'recording', 'sound_editing', 'reconstruction']:
+            if c[role] is None:
+                continue
+            for name in c[role].split(' and '):
+                if name:
+                    cid = slug(HumanName(name).last)
+                    contribs[c['Language_ID']][cid].append(role)
+
+    data.add(
+        common.Contributor,
+        'wichmann',
+        id='wichmann',
+        name='Søren Wichmann',
+        description='Reconstructions of Proto-Forms',
+        jsondata=dict(img=None),
     )
-    data.add(common.Contributor, 'kondic', id='kondic', name='Ana Kondic')
-    data.add(common.Contributor, 'gray', id='gray', name='Russell Gray')
-    DBSession.add(common.ContributionContributor(
-        contribution=contrib,
-        contributor=data['Contributor']['kondic'],
-    ))
-    for i, ed in enumerate(['kondic', 'gray']):
-        data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
     ancestors = collections.defaultdict(list)
     gl = Glottolog(args.glottolog)
@@ -69,8 +91,29 @@ def main(args):
                 ancestors[lang['id']].append('Protomixe')
             if 'Oaxaca Mixe' in lineage:
                 ancestors[lang['id']].append('Protooaxacamixe')
+            sgroup = glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None
         if not glang:
-            assert lang['name'] == 'Nizaviguiti'
+            if lang['name'] == 'Nizaviguiti':
+                ancestors[lang['id']].append('Protomixe')
+                sgroup = 'Mixe'
+            elif lang['name'] == 'Tapalapa':
+                ancestors[lang['id']].append('Protomixezoque')
+                sgroup = 'Zoque'
+
+        contrib = data.add(
+            common.Contribution,
+            lang['id'],
+            id=lang['id'],
+            name='Wordlist for {}'.format(lang['name']),
+        )
+        if lang['id'] in contribs:
+            for cid, roles in contribs[lang['id']].items():
+                DBSession.add(common.ContributionContributor(
+                    contribution=contrib,
+                    contributor=data['Contributor'][cid],
+                    jsondata=dict(roles=roles),
+                ))
+
         data.add(
             models.Variety,
             lang['id'],
@@ -80,13 +123,22 @@ def main(args):
             longitude=lang['longitude'],
             glottocode=lang['glottocode'],
             description=lang['LongName'],
-            subgroup=glang.lineage[1][0] if glang and len(glang.lineage) > 1 else None,
+            subgroup=sgroup,
         )
+
+    contrib = data.add(
+        common.Contribution,
+        None,
+        id='cldf',
+        name=args.cldf.properties.get('dc:title'),
+        description=args.cldf.properties.get('dc:bibliographicCitation'),
+    )
+
     colors = dict(zip(
-        set(l.subgroup for l in data['Variety'].values()),
-        qualitative_colors(len(set(l.subgroup for l in data['Variety'].values())))))
-    for l in data['Variety'].values():
-        l.jsondata = dict(color=colors[l.subgroup].replace('#', ''))
+        set(lg.subgroup for lg in data['Variety'].values()),
+        qualitative_colors(len(set(lg.subgroup for lg in data['Variety'].values())))))
+    for lg in data['Variety'].values():
+        lg.jsondata = dict(color=colors[lg.subgroup].replace('#', ''))
 
     for rec in bibtex.Database.from_file(args.cldf.bibpath, lowercase=True):
         data.add(common.Source, rec.id, _obj=bibtex2source(rec))
@@ -116,8 +168,11 @@ def main(args):
             jsondata=dict(reconstructions=proto),
         )
 
-    f2a = form2audio(args.cldf)
-    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source'):
+    for i, ed in enumerate(['kondic', 'gray']):
+        data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
+
+    f2a = form2audio(args.cldf, 'audio/mpeg')
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source', 'comment', 'segments'):
         assert not (form['form'] == '►' and not f2a.get(form['id']))
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)
@@ -143,9 +198,10 @@ def main(args):
             form['id'],
             id=form['id'],
             name=form['form'],
+            description=' '.join(form['segments']),
             valueset=vs,
             audio=f2a.get(form['id']),
-            jsondata=dict(reconstructions=proto),
+            jsondata=dict(reconstructions=proto, comment=form['comment']),
         )
 
     for (vsid, sid), pages in refs.items():
@@ -161,3 +217,22 @@ def prime_cache(args):
     This procedure should be separate from the db initialization, because
     it will have to be run periodically whenever data has been updated.
     """
+
+    for cpt in DBSession.query(
+        models.Concept, func.count(models.Concept.pk))\
+            .filter(common.Value.name != '►')\
+            .join(common.ValueSet).join(common.Value).group_by(
+                models.Concept.pk, common.Parameter.pk):
+        cpt[0].count_lexemes = cpt[1]
+
+    for language in DBSession.query(common.Language).options(
+            joinedload(common.Language.valuesets, common.ValueSet.references)):
+        language.count_concepts = len(language.valuesets)
+        language.count_lexemes = len(DBSession.query(common.Value.id)
+                                     .filter(common.ValueSet.language_pk == language.pk)
+                                     .filter(common.Value.name != '►')
+                                     .join(common.ValueSet).all())
+        language.count_soundfiles = len(DBSession.query(Counterpart.id)
+                                        .filter(common.ValueSet.language_pk == language.pk)
+                                        .filter(Counterpart.audio.isnot(None))
+                                        .join(common.ValueSet).all())
