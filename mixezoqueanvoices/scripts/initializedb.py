@@ -172,7 +172,7 @@ def main(args):
         data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
     f2a = form2audio(args.cldf, 'audio/mpeg')
-    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source', 'comment'):
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source', 'comment', 'segments'):
         assert not (form['form'] == '►' and not f2a.get(form['id']))
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)
@@ -198,10 +198,10 @@ def main(args):
             form['id'],
             id=form['id'],
             name=form['form'],
-            description=form['comment'],
+            description=' '.join(form['segments']),
             valueset=vs,
             audio=f2a.get(form['id']),
-            jsondata=dict(reconstructions=proto),
+            jsondata=dict(reconstructions=proto, comment=form['comment']),
         )
 
     for (vsid, sid), pages in refs.items():
