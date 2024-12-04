@@ -6,7 +6,6 @@ from sqlalchemy import (
     Integer,
     Boolean,
     ForeignKey,
-    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declared_attr
@@ -24,9 +23,28 @@ class Variety(CustomModelMixin, common.Language):
     pk = Column(Integer, ForeignKey('language.pk'), primary_key=True)
     glottocode = Column(Unicode)
     subgroup = Column(Unicode)
+    contribution_pk = Column(Integer, ForeignKey('contribution.pk'))
+    contribution = relationship(common.Contribution, backref=backref('variety', uselist=False))
     count_lexemes = Column(Integer, default=0)
     count_concepts = Column(Integer, default=0)
     count_soundfiles = Column(Integer, default=0)
+
+    def get_identifier_objs(self, type_):
+        o = common.Identifier()
+        if getattr(type_, 'value', type_) == str(common.IdentifierType.glottolog):
+            if not self.glottocode:
+                return []
+            o.name = self.glottocode
+            o.type = str(common.IdentifierType.glottolog)
+            return [o]
+        if hasattr(self, 'iso'):
+            if getattr(type_, 'value', type_) == str(common.IdentifierType.iso):
+                if not self.iso:
+                    return []
+                o.name = self.iso
+                o.type = str(common.IdentifierType.iso)
+                return [o]
+        return []
 
 
 @implementer(interfaces.IParameter)

@@ -1,15 +1,15 @@
 # Translations template for mixezoqueanvoices.
-# Copyright (C) 2023 ORGANIZATION
+# Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the mixezoqueanvoices
 # project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: mixezoqueanvoices 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-10-05 10:50+0200\n"
+"POT-Creation-Date: 2024-12-04 11:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,9 +26,11 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: mixezoqueanvoices/__init__.py:13 mixezoqueanvoices/datatables.py:81
+#: mixezoqueanvoices/__init__.py:13 mixezoqueanvoices/datatables.py:123
+#: mixezoqueanvoices/datatables.py:147
 #: mixezoqueanvoices/templates/language/detail_html.mako:4
 #: mixezoqueanvoices/templates/language/detail_html.mako:6
+#: mixezoqueanvoices/templates/value/detail_html.mako:12
 msgid "Language"
 msgstr ""
 
@@ -38,59 +40,70 @@ msgstr ""
 msgid "Parameter"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:22 mixezoqueanvoices/datatables.py:119
+#: mixezoqueanvoices/datatables.py:32 mixezoqueanvoices/datatables.py:186
 msgid "Name"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:26
+#: mixezoqueanvoices/datatables.py:37
+#: mixezoqueanvoices/templates/language/detail_html.mako:24
 msgid "Subgroup"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:30
+#: mixezoqueanvoices/datatables.py:41
 msgid "# concepts"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:31
+#: mixezoqueanvoices/datatables.py:42
 msgid "number of concepts per language"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:34 mixezoqueanvoices/datatables.py:109
+#: mixezoqueanvoices/datatables.py:45 mixezoqueanvoices/datatables.py:176
 msgid "# words"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:35
+#: mixezoqueanvoices/datatables.py:46
 msgid "number of words per language"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:38
+#: mixezoqueanvoices/datatables.py:49
 msgid "# audio"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:39
+#: mixezoqueanvoices/datatables.py:50
 msgid "number of sound files per language"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:69 mixezoqueanvoices/datatables.py:106
+#: mixezoqueanvoices/datatables.py:111 mixezoqueanvoices/datatables.py:138
+#: mixezoqueanvoices/datatables.py:173
 msgid "English"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:74
+#: mixezoqueanvoices/datatables.py:116 mixezoqueanvoices/datatables.py:143
 msgid "Spanish"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:85
+#: mixezoqueanvoices/datatables.py:128 mixezoqueanvoices/datatables.py:152
 msgid "Location"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:91
+#: mixezoqueanvoices/datatables.py:157
 msgid "Word"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:110
+#: mixezoqueanvoices/datatables.py:158
+#: mixezoqueanvoices/templates/value/detail_html.mako:10
+msgid "Segments"
+msgstr ""
+
+#: mixezoqueanvoices/datatables.py:160
+msgid "Reconstruction"
+msgstr ""
+
+#: mixezoqueanvoices/datatables.py:177
 msgid "number of words per concept"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:120
+#: mixezoqueanvoices/datatables.py:187
 msgid "Role"
 msgstr ""
 
@@ -139,5 +152,38 @@ msgstr ""
 
 #: mixezoqueanvoices/templates/dataset/detail_html.mako:25
 msgid "Cite the Mixe-Zoquean Voices dataset as"
+msgstr ""
+
+#: mixezoqueanvoices/templates/language/detail_html.mako:14
+msgid "Contributors"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:4
+msgid "Lexeme"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:6
+msgid "Value"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:14
+msgid "Meaning"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:17
+msgid "References"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:31
+msgid "Reconstructions"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/detail_html.mako:41
+msgid "Sentences"
+msgstr ""
+
+#: mixezoqueanvoices/templates/value/index_html.mako:5
+#: mixezoqueanvoices/templates/value/index_html.mako:6
+msgid "Values"
 msgstr ""
 

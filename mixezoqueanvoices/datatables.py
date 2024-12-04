@@ -1,12 +1,14 @@
+from clld.db.models import common
+from clld.db.util import get_distinct_values
+from clld.web import datatables
 from clld.web.datatables.base import LinkCol, Col, LinkToMapCol
 from clld.web.datatables.contributor import Contributors
-from clld.web import datatables
 from clld.web.util import concepticon
-from clld.web.util.htmllib import HTML
+from clld.web.util.glottolog import url
 from clld.web.util.helpers import map_marker_img
-from clld.db.util import get_distinct_values
-from clld.db.models import common
+from clld.web.util.htmllib import HTML
 from clld_audio_plugin.datatables import AudioCol
+
 from sqlalchemy.orm import joinedload
 
 from mixezoqueanvoices import models
@@ -14,13 +16,24 @@ from mixezoqueanvoices import models
 
 class SubgroupCol(Col):
     def format(self, item):
-        return HTML.div(map_marker_img(self.dt.req, item), ' ', HTML.span(item.subgroup))
+        try:
+            return HTML.div(map_marker_img(self.dt.req, item), ' ', HTML.span(item.subgroup))
+        except Exception:
+            return HTML.div(map_marker_img(self.dt.req, item.valueset.language), ' ', HTML.span(item.valueset.language.subgroup))
+
+
+class MZGlottologCol(Col):
+    def format(self, item):
+        if item.glottocode:
+            return HTML.a(item.glottocode, href=url(item.glottocode))
+        return ''
 
 
 class Languages(datatables.Languages):
     def col_defs(self):
         return [
             LinkCol(self, 'name', sTitle=self.req._('Name')),
+            MZGlottologCol(self, 'Glottocode', model_col=models.Variety.glottocode),
             SubgroupCol(
                 self,
                 'subgroup',
@@ -88,7 +101,12 @@ class Words(datatables.Values):
 
     def get_default_options(self):
         opts = super(datatables.Values, self).get_default_options()
-        opts['aaSorting'] = [[2, 'asc'], [0, 'asc']]
+        if not self.language and not self.parameter:
+            opts['aaSorting'] = [[0, 'asc'], [3, 'asc'], [2, 'asc']]
+        elif self.parameter:
+            opts['aaSorting'] = [[1, 'asc'], [0, 'asc'], [3, 'asc']]
+        else:
+            opts['aaSorting'] = [[0, 'asc'], [3, 'asc']]
         return opts
 
     def col_defs(self):
@@ -113,12 +131,18 @@ class Words(datatables.Values):
                 LinkCol(self, 'language', sTitle=self.req._('Language'),
                         get_object=lambda v: v.valueset.language,
                         model_col=common.Language.name),
-                Col(self,
-                    'desc',
-                    sTitle=self.req._('Location'),
-                    get_object=lambda v: v.valueset.language,
-                    model_col=common.Language.description,
-                    ),
+                SubgroupCol(
+                    self,
+                    'subgroup',
+                    sTitle=self.req._('Subgroup'),
+                    model_col=models.Variety.subgroup,
+                    choices=get_distinct_values(models.Variety.subgroup)),
+                # Col(self,
+                #     'desc',
+                #     sTitle=self.req._('Location'),
+                #     get_object=lambda v: v.valueset.language,
+                #     model_col=common.Language.description,
+                #     ),
             ])
         else:
             res.extend([
@@ -137,12 +161,18 @@ class Words(datatables.Values):
                 LinkCol(self, 'language', sTitle=self.req._('Language'),
                         get_object=lambda v: v.valueset.language,
                         model_col=common.Language.name),
-                Col(self,
-                    'desc',
-                    sTitle=self.req._('Location'),
-                    get_object=lambda v: v.valueset.language,
-                    model_col=common.Language.description,
-                    ),
+                SubgroupCol(
+                    self,
+                    'subgroup',
+                    sTitle=self.req._('Subgroup'),
+                    model_col=models.Variety.subgroup,
+                    choices=get_distinct_values(models.Variety.subgroup)),
+                # Col(self,
+                #     'desc',
+                #     sTitle=self.req._('Location'),
+                #     get_object=lambda v: v.valueset.language,
+                #     model_col=common.Language.description,
+                #     ),
                 ])
         res.append(WordLinkCol(self, 'name', sTitle=self.req._('Word')))
         res.append(Col(self, 'description', sTitle=self.req._('Segments')))

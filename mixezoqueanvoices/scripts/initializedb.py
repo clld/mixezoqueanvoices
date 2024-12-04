@@ -124,15 +124,8 @@ def main(args):
             glottocode=lang['glottocode'],
             description=lang['LongName'],
             subgroup=sgroup,
+            contribution=contrib,
         )
-
-    contrib = data.add(
-        common.Contribution,
-        None,
-        id='cldf',
-        name=args.cldf.properties.get('dc:title'),
-        description=args.cldf.properties.get('dc:bibliographicCitation'),
-    )
 
     colors = dict(zip(
         set(lg.subgroup for lg in data['Variety'].values()),
