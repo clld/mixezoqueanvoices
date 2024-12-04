@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mixezoqueanvoices 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-04 11:52+0100\n"
+"POT-Creation-Date: 2024-12-04 18:18+0100\n"
 "PO-Revision-Date: 2023-10-05 10:47+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -20,15 +20,17 @@ msgstr ""
 "Generated-By: Babel 2.13.0\n"
 
 #: mixezoqueanvoices/__init__.py:11
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:20
 msgid "Languages"
 msgstr "Doculects"
 
 #: mixezoqueanvoices/__init__.py:12
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:24
 msgid "Parameters"
 msgstr "Concepts"
 
-#: mixezoqueanvoices/__init__.py:13 mixezoqueanvoices/datatables.py:123
-#: mixezoqueanvoices/datatables.py:147
+#: mixezoqueanvoices/__init__.py:13 mixezoqueanvoices/datatables.py:131
+#: mixezoqueanvoices/datatables.py:161
 #: mixezoqueanvoices/templates/language/detail_html.mako:4
 #: mixezoqueanvoices/templates/language/detail_html.mako:6
 #: mixezoqueanvoices/templates/value/detail_html.mako:12
@@ -41,70 +43,67 @@ msgstr "Doculect"
 msgid "Parameter"
 msgstr "Concept"
 
-#: mixezoqueanvoices/datatables.py:32 mixezoqueanvoices/datatables.py:186
+#: mixezoqueanvoices/datatables.py:35 mixezoqueanvoices/datatables.py:206
 msgid "Name"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:37
+#: mixezoqueanvoices/datatables.py:40 mixezoqueanvoices/datatables.py:137
+#: mixezoqueanvoices/datatables.py:167
 #: mixezoqueanvoices/templates/language/detail_html.mako:24
 msgid "Subgroup"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:41
+#: mixezoqueanvoices/datatables.py:44
 msgid "# concepts"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:42
+#: mixezoqueanvoices/datatables.py:45
 msgid "number of concepts per language"
 msgstr "number of concepts per doculect"
 
-#: mixezoqueanvoices/datatables.py:45 mixezoqueanvoices/datatables.py:176
+#: mixezoqueanvoices/datatables.py:48 mixezoqueanvoices/datatables.py:196
 msgid "# words"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:46
+#: mixezoqueanvoices/datatables.py:49
 msgid "number of words per language"
 msgstr "number of words per doculect"
 
-#: mixezoqueanvoices/datatables.py:49
+#: mixezoqueanvoices/datatables.py:52
 msgid "# audio"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:50
+#: mixezoqueanvoices/datatables.py:53
 msgid "number of sound files per language"
 msgstr "number of sound files per doculect"
 
-#: mixezoqueanvoices/datatables.py:111 mixezoqueanvoices/datatables.py:138
-#: mixezoqueanvoices/datatables.py:173
+#: mixezoqueanvoices/datatables.py:119 mixezoqueanvoices/datatables.py:152
+#: mixezoqueanvoices/datatables.py:193
 msgid "English"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:116 mixezoqueanvoices/datatables.py:143
+#: mixezoqueanvoices/datatables.py:124 mixezoqueanvoices/datatables.py:157
 msgid "Spanish"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:128 mixezoqueanvoices/datatables.py:152
-msgid "Location"
-msgstr ""
-
-#: mixezoqueanvoices/datatables.py:157
+#: mixezoqueanvoices/datatables.py:177
 msgid "Word"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:158
+#: mixezoqueanvoices/datatables.py:178
 #: mixezoqueanvoices/templates/value/detail_html.mako:10
 msgid "Segments"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:160
+#: mixezoqueanvoices/datatables.py:180
 msgid "Reconstruction"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:177
+#: mixezoqueanvoices/datatables.py:197
 msgid "number of words per concept"
 msgstr ""
 
-#: mixezoqueanvoices/datatables.py:187
+#: mixezoqueanvoices/datatables.py:207
 msgid "Role"
 msgstr ""
 
@@ -141,17 +140,27 @@ msgstr ""
 msgid "on ZENODO as well"
 msgstr ""
 
-#: mixezoqueanvoices/templates/dataset/detail_html.mako:18
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:16
+msgid "Statistics"
+msgstr ""
+
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:28
+#: mixezoqueanvoices/templates/value/index_html.mako:5
+#: mixezoqueanvoices/templates/value/index_html.mako:6
+msgid "Values"
+msgstr "Words"
+
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:37
 msgid "Welcome to"
 msgstr ""
 
-#: mixezoqueanvoices/templates/dataset/detail_html.mako:21
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:40
 msgid ""
 "Mixe-Zoquean Voices presents primary recordings of languages from the "
 "Mixe-Zoque language family."
 msgstr ""
 
-#: mixezoqueanvoices/templates/dataset/detail_html.mako:25
+#: mixezoqueanvoices/templates/dataset/detail_html.mako:44
 msgid "Cite the Mixe-Zoquean Voices dataset as"
 msgstr ""
 
@@ -183,8 +192,6 @@ msgstr ""
 msgid "Sentences"
 msgstr ""
 
-#: mixezoqueanvoices/templates/value/index_html.mako:5
-#: mixezoqueanvoices/templates/value/index_html.mako:6
-msgid "Values"
-msgstr "Words"
+#~ msgid "Location"
+#~ msgstr ""
 
