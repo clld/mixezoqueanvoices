@@ -3,7 +3,7 @@ import pathlib
 
 from pycldf import Sources
 from clldutils.misc import nfilter
-from clld.cliutil import Data, bibtex2source
+from clld.cliutil import Data, bibtex2source, add_language_codes
 from clld.db.meta import DBSession
 from clld.db.models import common
 from clld.lib import bibtex
@@ -77,13 +77,14 @@ def main(args):
     )
 
     ancestors = collections.defaultdict(list)
-    gl = Glottolog(args.glottolog)
+    glc_api = Glottolog(args.glottolog)
+    languoids_by_code = glc_api.languoids_by_code()
     lnames = {}
     for lang in args.cldf.iter_rows('LanguageTable', 'id', 'glottocode', 'name', 'latitude', 'longitude'):
         lnames[lang['id']] = lang['name']
         glang = None
         if lang['glottocode']:
-            glang = gl.languoid(lang['glottocode'])
+            glang = glc_api.languoid(lang['glottocode'])
             lineage = [i[0] for i in glang.lineage]
             if 'Mixe-Zoque' in lineage:
                 ancestors[lang['id']].append('Protomixezoque')
@@ -114,7 +115,7 @@ def main(args):
                     jsondata=dict(roles=roles),
                 ))
 
-        data.add(
+        clg = data.add(
             models.Variety,
             lang['id'],
             id=lang['id'],
@@ -126,6 +127,11 @@ def main(args):
             subgroup=sgroup,
             contribution=contrib,
         )
+
+        glc_language = languoids_by_code.get(lang['glottocode'], None)
+        if glc_language:
+            add_language_codes(
+                        data, clg, glc_language.iso, glottocode=glc_language.id)
 
     colors = dict(zip(
         set(lg.subgroup for lg in data['Variety'].values()),
@@ -165,7 +171,8 @@ def main(args):
         data.add(common.Editor, ed, dataset=ds, contributor=data['Contributor'][ed], ord=i)
 
     f2a = form2audio(args.cldf, 'audio/mpeg')
-    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference', 'parameterReference', 'source', 'comment', 'Graphemes'):
+    for form in args.cldf.iter_rows('FormTable', 'id', 'form', 'languageReference',
+                                    'parameterReference', 'source', 'comment', 'Graphemes'):
         assert not (form['form'] == '►' and not f2a.get(form['id']))
         vsid = (form['languageReference'], form['parameterReference'])
         vs = data['ValueSet'].get(vsid)

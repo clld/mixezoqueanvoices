@@ -8,11 +8,11 @@
 <h2>${_('Parameter')} ${ctx.name}</h2>
 
 % if ctx.description:
-    <p><strong>Spanish:</strong> ${ctx.description}</p>
+    <p><strong>${_('Spanish')}:</strong> ${ctx.description}</p>
 % endif
 
 % if ctx.jsondata['reconstructions']:
-    <h4>Reconstructions [<a href="${req.route_url('source', id='Wichmann1995')}">Wichmann 1995</a>]</h4>
+    <h4>${_('Reconstructions')} [<a href="${req.route_url('source', id='Wichmann1995')}">Wichmann 1995</a>]</h4>
     <dl class="dl-horizontal">
         % for l, forms in ctx.jsondata['reconstructions'].items():
             <dt>${l}:</dt>

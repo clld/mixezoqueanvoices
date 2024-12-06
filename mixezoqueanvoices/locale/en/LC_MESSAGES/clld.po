@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mixezoqueanvoices 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-04 18:18+0100\n"
+"POT-Creation-Date: 2024-12-06 09:37+0100\n"
 "PO-Revision-Date: 2023-10-05 10:47+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -83,6 +83,7 @@ msgid "English"
 msgstr ""
 
 #: mixezoqueanvoices/datatables.py:124 mixezoqueanvoices/datatables.py:157
+#: mixezoqueanvoices/templates/parameter/detail_html.mako:11
 msgid "Spanish"
 msgstr ""
 
@@ -168,6 +169,11 @@ msgstr ""
 msgid "Contributors"
 msgstr ""
 
+#: mixezoqueanvoices/templates/parameter/detail_html.mako:15
+#: mixezoqueanvoices/templates/value/detail_html.mako:31
+msgid "Reconstructions"
+msgstr ""
+
 #: mixezoqueanvoices/templates/value/detail_html.mako:4
 msgid "Lexeme"
 msgstr ""
@@ -182,10 +188,6 @@ msgstr ""
 
 #: mixezoqueanvoices/templates/value/detail_html.mako:17
 msgid "References"
-msgstr ""
-
-#: mixezoqueanvoices/templates/value/detail_html.mako:31
-msgid "Reconstructions"
 msgstr ""
 
 #: mixezoqueanvoices/templates/value/detail_html.mako:41

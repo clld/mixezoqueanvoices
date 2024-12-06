@@ -29,23 +29,6 @@ class Variety(CustomModelMixin, common.Language):
     count_concepts = Column(Integer, default=0)
     count_soundfiles = Column(Integer, default=0)
 
-    def get_identifier_objs(self, type_):
-        o = common.Identifier()
-        if getattr(type_, 'value', type_) == str(common.IdentifierType.glottolog):
-            if not self.glottocode:
-                return []
-            o.name = self.glottocode
-            o.type = str(common.IdentifierType.glottolog)
-            return [o]
-        if hasattr(self, 'iso'):
-            if getattr(type_, 'value', type_) == str(common.IdentifierType.iso):
-                if not self.iso:
-                    return []
-                o.name = self.iso
-                o.type = str(common.IdentifierType.iso)
-                return [o]
-        return []
-
 
 @implementer(interfaces.IParameter)
 class Concept(CustomModelMixin, common.Parameter):
