@@ -16,8 +16,6 @@
         }
 
     </style>
-        <script src="${req.static_url('mixezoqueanvoices:static/L.Control.Resizer.js')}"></script>
-        <link rel="stylesheet" href="${req.static_url('mixezoqueanvoices:static/L.Control.Resizer.css')}">
 </%block>
 
 ${next.body()}
