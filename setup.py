@@ -19,8 +19,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'clld>=11.0.1',
-        'cldfbench>=1.13.0',
+        'clld>=11.5.5',
+        'cldfbench>=2',
         'clld-glottologfamily-plugin>=4.0',
         'clld-audio-plugin>=1.0.0',
         'pyglottolog>=3.12.0',

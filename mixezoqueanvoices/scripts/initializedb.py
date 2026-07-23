@@ -1,5 +1,4 @@
 import collections
-import pathlib
 
 from pycldf import Sources
 from clldutils.misc import nfilter
