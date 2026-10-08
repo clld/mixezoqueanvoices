@@ -25,6 +25,7 @@ setup(
         'clld-audio-plugin>=1.0.0',
         'pyglottolog>=3.12.0',
         'clldmpg>=4.3.0',
+        'psycopg2',
 ],
 extras_require={
         'dev': ['flake8', 'waitress', 'psycopg2'],
