@@ -15,7 +15,7 @@ from cldfbench import get_dataset
 from pyglottolog import Glottolog
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-from nameparser import HumanName
+import nameparser
 
 import mixezoqueanvoices
 from mixezoqueanvoices import models
@@ -43,10 +43,10 @@ def main(args):
             'license_name': license.name},
     )
 
-    r = get_dataset('mixezoqueanvoices', ep='lexibank.dataset')
+    r = get_dataset(args.cldf.directory.parent / 'lexibank_mixezoqueanvoices.py')
     authors, _ = r.get_creators_and_contributors()
     for ord, author in enumerate(authors):
-        cid = slug(HumanName(author['name']).last)
+        cid = slug(nameparser.parse(author['name']).family)
         c = data.add(
             common.Contributor,
             cid,
@@ -63,7 +63,7 @@ def main(args):
                 continue
             for name in c[role].split(' and '):
                 if name:
-                    cid = slug(HumanName(name).last)
+                    cid = slug(nameparser.parse(name).family)
                     contribs[c['Language_ID']][cid].append(role)
 
     data.add(
